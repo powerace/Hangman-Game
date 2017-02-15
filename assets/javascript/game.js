@@ -1,10 +1,14 @@
 var game = {
 	words: ["monster", "jewels", "pizza", "coding"],
-	totalGuesses: 20,
+	totalGuesses: 15,
 	images: ["monster.png","jewels.png","pizza.png","coding.png"],
 	rounds: 0,
-	setUpWord: function(){
+	wins: 0,
+	setUpGame: function(){
 		var answer = document.querySelector(".answer");
+		answer.innerHTML = "";
+		this.totalGuesses = 15;
+		document.querySelector(".lettersGuessed").innerHTML = "";
 
 		for(var counter = 0; counter < this.words[this.rounds].length; counter++){
 			//console.log(answer);
@@ -12,41 +16,79 @@ var game = {
 			underScore.innerHTML = '_ ';
 			underScore.className = "letter" + counter;
 			answer.appendChild(underScore);
-
 		}
 
-		document.querySelector(".guessRemain").innerHTML = "20";
+		document.querySelector(".guessRemain").innerHTML = this.totalGuesses;
 	},
 	checkIfLetterMatches: function(event){
 
 	var letterTyped = String.fromCharCode(event.keyCode).toLowerCase();
 	console.log(letterTyped);
+	var currentWord = this.words[this.rounds];
 
-	var letterTypedIndex = this.words[this.rounds].indexOf(letterTyped);
+	var letterTypedIndexes = function (currentWord, letterTyped) {
+	    var indexes = [], i;
+	    for(i = 0; i < arr.length; i++)
+	        if (currentWord[i] === val)
+	            indexes.push(i);
+	    return indexes;
+	}
 
-        if (letterTypedIndex !== -1){
-          this.letterMatches(letterTypedIndex, letterTyped);
-        } else {
-        	this.letterDoesNotMatch();
-        }
+	console.log(indexes);
+
+	var letterNode = document.createTextNode(letterTyped);
+
+		for (var i = letterTypedIndexes.length - 1; i >= 0; i--) {
+			console.log(letterTypedIndexes[i]);
+			
+			if (letterTypedIndexes[i]!== -1){
+          		document.querySelector(".letter" + letterTypedIndexes[i]).innerHTML = letterTyped;
+        	} 
+		}
+
+        
+
+        document.querySelector(".lettersGuessed").appendChild(letterNode);
+		this.totalGuesses--
 	},
-	letterMatches: function(letterTypedIndex, letterTyped){
-	console.log(letterTypedIndex);
-		document.querySelector(".letter" + letterTypedIndex).innerHTML = letterTyped;
-		game.totalGuesses--
+	// letterMatches: function(letterTypedIndex, letterTyped){
+	// console.log(letterTypedIndex);
+	// 	document.querySelector(".letter" + letterTypedIndex).innerHTML = letterTyped;
+	// },
+	win: function(){
+		if (document.querySelector(".answer").textContent.indexOf('_') === -1) {
+			this.wins = this.wins + 1;
+			console.log(this.wins);
+			document.querySelector(".winNum").innerHTML = this.wins;
+			this.rounds++
+			console.log(this.rounds);
+			this.setUpGame();
+		}
 	},
-	letterDoesNotMatch: function(){},
-	showLettersGuessed: function(){}
+	lose: function(){
+		if ((document.querySelector(".answer").textContent.indexOf('_') !== -1) && (document.querySelector(".guessRemain").textContent === "0")) {
+			console.log('lose');
+			this.rounds++
+			this.setUpGame();
+		}
+	}
 };
 
 
-game.setUpWord();
+for (var i = game.words.length - 1; i >= 0; i--) {
 
-document.onkeyup = function(event){
-	
-	document.querySelector(".guessRemain").innerHTML = game.totalGuesses;
-	game.checkIfLetterMatches(event);
+	game.setUpGame();
+
+	document.onkeyup = function(event){
+		
+		game.checkIfLetterMatches(event);
+		document.querySelector(".guessRemain").innerHTML = game.totalGuesses;
+		game.lose();
+		game.win();
+	}
 }
+
+
 
 
 

@@ -1,5 +1,5 @@
 var game = {
-	words: ["monster", "jewels", "pizza", "coding"],
+	words: ["monster", "krystal", "pizza", "coding"],
 	totalGuesses: 15,
 	images: ["monster.png","jewels.png","pizza.png","coding.png"],
 	rounds: 0,
@@ -24,44 +24,33 @@ var game = {
 
 	var letterTyped = String.fromCharCode(event.keyCode).toLowerCase();
 	console.log(letterTyped);
-	var currentWord = this.words[this.rounds];
 
-	var letterTypedIndexes = function (currentWord, letterTyped) {
-	    var indexes = [], i;
-	    for(i = 0; i < arr.length; i++)
-	        if (currentWord[i] === val)
-	            indexes.push(i);
-	    return indexes;
-	}
-
-	console.log(indexes);
+	var letterTypedIndex = this.words[this.rounds].indexOf(letterTyped);
 
 	var letterNode = document.createTextNode(letterTyped);
 
-		for (var i = letterTypedIndexes.length - 1; i >= 0; i--) {
-			console.log(letterTypedIndexes[i]);
-			
-			if (letterTypedIndexes[i]!== -1){
-          		document.querySelector(".letter" + letterTypedIndexes[i]).innerHTML = letterTyped;
-        	} 
-		}
-
-        
+        if (letterTypedIndex !== -1){
+          this.letterMatches(letterTypedIndex, letterTyped);
+        } 
 
         document.querySelector(".lettersGuessed").appendChild(letterNode);
 		this.totalGuesses--
 	},
-	// letterMatches: function(letterTypedIndex, letterTyped){
-	// console.log(letterTypedIndex);
-	// 	document.querySelector(".letter" + letterTypedIndex).innerHTML = letterTyped;
-	// },
+	letterMatches: function(letterTypedIndex, letterTyped){
+	console.log(letterTypedIndex);
+		document.querySelector(".letter" + letterTypedIndex).innerHTML = letterTyped;
+	},
 	win: function(){
 		if (document.querySelector(".answer").textContent.indexOf('_') === -1) {
 			this.wins = this.wins + 1;
 			console.log(this.wins);
 			document.querySelector(".winNum").innerHTML = this.wins;
+			document.querySelector(".feature").src = "assets/images/" + this.images[this.rounds]; 
+			document.querySelector(".title").innerHTML = this.words[this.rounds];
+
 			this.rounds++
 			console.log(this.rounds);
+
 			this.setUpGame();
 		}
 	},
@@ -87,6 +76,8 @@ for (var i = game.words.length - 1; i >= 0; i--) {
 		game.win();
 	}
 }
+
+
 
 
 
